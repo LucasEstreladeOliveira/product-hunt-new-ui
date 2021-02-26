@@ -6,11 +6,11 @@ import PostCard from "./PostCard"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import InfiniteScroll from 'react-infinite-scroll-component'
 
-function GetPosts(props) {
+function Posts(props) {
   const { loading, data, error, fetchMore } = useQuery(GET_POSTS, {
     variables: { after: null, order: props.ordem }
   });
-  console.log(props.ordem);
+
   const [posts, setPosts] = useState({});
   
   useEffect(() => {
@@ -28,8 +28,6 @@ function GetPosts(props) {
     fetchMore({
       variables: { after: endCursor },
       updateQuery: ( prevResult, { fetchMoreResult }) => {
-        console.log(prevResult.posts)
-        console.log(fetchMoreResult.posts)
         fetchMoreResult.posts.edges = [
           ...prevResult.posts.edges,
           ...fetchMoreResult.posts.edges
@@ -43,9 +41,9 @@ function GetPosts(props) {
     <div>
       <InfiniteScroll dataLength={data.posts.edges.length} next={fetchMoreData} hasMore={data.posts.pageInfo.hasNextPage}>
         {
-          posts?.posts?.edges.map( edge => {
+          posts?.posts?.edges.map( (edge, index) => {
             return (
-              <PostCard>
+              <PostCard key={index}>
                 <div className="conten-wrapper">
                   <div className="content-thumb">
                     <img src={edge.node.thumbnail.url} alt="thumbnail"></img>
@@ -75,4 +73,4 @@ function GetPosts(props) {
   )
 } 
 
-export default GetPosts; 
+export default Posts; 
