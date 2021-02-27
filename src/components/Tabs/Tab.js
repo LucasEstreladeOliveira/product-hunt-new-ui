@@ -7,7 +7,8 @@ const Tab = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-
+  cursor: pointer;
+  
   .link {
     font-family: 'Raleway';
     color: #555;

@@ -10,8 +10,8 @@ function Feed() {
 
   const [tabs, setTabs] = useState([{name: "Popular", route: "/", selected: false}, {name: "Newest", route: "/newest", selected: false}])
 
-  useEffect(() => {
-    let newTabs = tabs.map( tab => {
+  function selectTab() {
+    return tabs.map( tab => {
       if(tab.route === location.pathname) {
         tab.selected = true
       }else{
@@ -19,7 +19,11 @@ function Feed() {
       }
       return tab;
     })
+  }
+  useEffect(() => {
+    let newTabs = selectTab();
     setTabs(newTabs);
+    // eslint-disable-next-line
   }, [location])
 
   return (

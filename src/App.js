@@ -1,9 +1,9 @@
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import { BrowserRouter as Router } from "react-router-dom";
-import "./globalStyle.css"
-import "./fontawesome"
-import Feed from "./views/Feed"
+import "./globalStyle.css";
+import "./fontawesome";
+import Feed from "./views/Feed";
 
 const httpLink = createHttpLink({
   uri: 'https://api.producthunt.com/v2/api/graphql',

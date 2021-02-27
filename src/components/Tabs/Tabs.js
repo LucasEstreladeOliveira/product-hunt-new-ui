@@ -10,10 +10,10 @@ const StyledTabs = styled.div`
   background-color: #ffffff;
 
   .selected {
-    border-bottom: 1px solid red;    
+    border-bottom: 1px solid #d9552d;    
   }
   .selected div{
-    color: red;
+    color: #d9552d;
   }
 `
 
@@ -32,7 +32,6 @@ function Tabs(props) {
       }
       return t;
     })
-
     setTabs(newTabs);
   }
 
