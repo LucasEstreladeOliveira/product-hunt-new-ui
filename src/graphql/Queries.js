@@ -25,7 +25,6 @@ query posts( $after: String, $order: PostsOrder){
 }
 `;
 
-
 export const GET_POST = gql`
 query post( $slug: String){ 
   post(slug: $slug) {
@@ -33,7 +32,39 @@ query post( $slug: String){
     tagline
     thumbnail {
       url
-    }	
+    }
+    topics(first: 3){
+      edges{
+        node{
+          name
+        }
+      }
+    }
+    votesCount
+    media{
+      url
+    }
+    description
   }
 }
 `;
+
+
+// const searchTopic = gql`
+// query SearchPostsQuery($featured:Boolean$first:Int$postedDate:String$query:String$topicNames:[String!]$year:Int){
+//   topics(query:$query first:3){
+//     edges{
+//       node{
+//         id 
+//         name 
+//         description 
+//         slug 
+//         ...TopicImage 
+//         __typename
+//       }
+//       __typename
+//     }
+//     __typename
+//   }
+// }
+// `
