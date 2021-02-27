@@ -6,25 +6,34 @@ query posts( $after: String, $order: PostsOrder){
     edges{
       cursor
       node{
+        slug
         id
         name
         tagline
         description
-        url
         votesCount
-        commentsCount
         thumbnail{
-          type
           url
         }
-        website
-        reviewsRating
       }
     }
     pageInfo {
       endCursor
       hasNextPage
     }
+  }
+}
+`;
+
+
+export const GET_POST = gql`
+query post( $slug: String){ 
+  post(slug: $slug) {
+    name		
+    tagline
+    thumbnail {
+      url
+    }	
   }
 }
 `;

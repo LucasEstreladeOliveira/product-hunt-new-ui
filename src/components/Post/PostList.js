@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useQuery } from '@apollo/client'
 import { GET_POSTS } from '../../graphql/Queries' 
-import Button from "../Button/Button"
 import PostCard from "./PostCard"
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import InfiniteScroll from 'react-infinite-scroll-component'
+import Load from "../Load/Load"
 
-function GetPosts(props) {
+function Posts(props) {
   const { loading, data, error, fetchMore } = useQuery(GET_POSTS, {
     variables: { after: null, order: props.ordem }
   });
-  console.log(props.ordem);
+
   const [posts, setPosts] = useState({});
   
   useEffect(() => {
@@ -20,7 +19,7 @@ function GetPosts(props) {
   
   
   if(loading) {
-    return "Loading...";
+    return (<Load />);
   }
   
   function fetchMoreData() {
@@ -28,8 +27,6 @@ function GetPosts(props) {
     fetchMore({
       variables: { after: endCursor },
       updateQuery: ( prevResult, { fetchMoreResult }) => {
-        console.log(prevResult.posts)
-        console.log(fetchMoreResult.posts)
         fetchMoreResult.posts.edges = [
           ...prevResult.posts.edges,
           ...fetchMoreResult.posts.edges
@@ -43,30 +40,9 @@ function GetPosts(props) {
     <div>
       <InfiniteScroll dataLength={data.posts.edges.length} next={fetchMoreData} hasMore={data.posts.pageInfo.hasNextPage}>
         {
-          posts?.posts?.edges.map( edge => {
+          posts?.posts?.edges.map( (edge, index) => {
             return (
-              <PostCard>
-                <div className="conten-wrapper">
-                  <div className="content-thumb">
-                    <img src={edge.node.thumbnail.url} alt="thumbnail"></img>
-                  </div>
-                  <div className="content">
-                    <div className="content-title">{edge.node.name}</div>
-                    <div className="content-tagline">{edge.node.tagline}</div>
-                  </div>
-                  
-                </div>
-                <Button>
-                  <div className="button-wrapper">
-                    <div className="icon-wrapper">
-                      <FontAwesomeIcon icon="caret-up"></FontAwesomeIcon>
-                    </div>
-                    <div className="votes">
-                      {edge.node.votesCount}
-                    </div>
-                  </div>
-                </Button>
-              </PostCard>
+              <PostCard key={index} edge={edge} />
             )
           })
         }
@@ -75,4 +51,4 @@ function GetPosts(props) {
   )
 } 
 
-export default GetPosts; 
+export default Posts; 
