@@ -1,9 +1,10 @@
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./globalStyle.css";
 import "./fontawesome";
 import Feed from "./views/Feed";
+import PostDetail from "./components/Post/PostDetail";
 
 const httpLink = createHttpLink({
   uri: 'https://api.producthunt.com/v2/api/graphql',
@@ -30,7 +31,12 @@ function App() {
   return (
     <Router>
       <ApolloProvider client={client}>
-        <Feed />
+        <Route path="/feed">
+          <Feed />
+        </Route>
+        <Route path="/post_detail">
+        <PostDetail />
+      </Route>
       </ApolloProvider>
     </Router>
   );

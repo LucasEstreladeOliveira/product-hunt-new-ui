@@ -1,8 +1,7 @@
 import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import Button from "../Button/Button"
-// import { GET_POST } from '../../graphql/Queries' 
-// import { useQuery } from '@apollo/client'
+import { useHistory } from "react-router-dom"
 
 const StyledPostCard = styled.div`
     display: -webkit-box;
@@ -52,26 +51,32 @@ const StyledPostCard = styled.div`
     }
 `
 
+
 function PostCard(props) {
-
-  // const { loading, data, error } = useQuery(GET_POST, {
-  //   variables: { slug: props.edge.node.slug }
-  // });
-  
-  // function getPost(slug) {
-
-  // } 
-
   const [edge, setEdges] = useState(props.edge);
+
+  let history = useHistory();
+  
 
   useEffect(() => {
     setEdges(props.edge)
   }, [props.edge])
 
+
+  function pushToPostDetail(slug) {
+    return (
+      history.push({
+        pathname: "/post_detail",
+        state: {
+          slug
+        }
+      })
+    )
+  }
   return( 
     <StyledPostCard>
       <div className="conten-wrapper" onClick={() => {
-        console.log("cliquei no post", edge.node.slug)
+        pushToPostDetail(edge.node.slug);
       }}>
         <div className="content-thumb">
           <img src={edge.node.thumbnail.url} alt="thumbnail"></img>
