@@ -5,6 +5,7 @@ import "./globalStyle.css";
 import "./fontawesome";
 import Feed from "./views/Feed";
 import PostDetail from "./components/Post/PostDetail";
+import { PostsProvider } from "./providers/posts" 
 
 const httpLink = createHttpLink({
   uri: 'https://api.producthunt.com/v2/api/graphql',
@@ -31,12 +32,14 @@ function App() {
   return (
     <Router>
       <ApolloProvider client={client}>
-        <Route path="/feed">
-          <Feed />
+        <PostsProvider>
+          <Route path="/feed">
+            <Feed />
+          </Route>
+          <Route path="/post_detail">
+          <PostDetail />
         </Route>
-        <Route path="/post_detail">
-        <PostDetail />
-      </Route>
+        </PostsProvider>
       </ApolloProvider>
     </Router>
   );

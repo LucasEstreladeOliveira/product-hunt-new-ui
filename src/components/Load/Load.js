@@ -9,7 +9,7 @@ const Load = styled.div`
   height: 60px;
   animation: spin 2s linear infinite;
   margin: auto;
-  margin-top: 50%;
+  margin-top: 50vh;
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

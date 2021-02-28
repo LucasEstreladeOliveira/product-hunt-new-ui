@@ -51,18 +51,17 @@ const StyledPostCard = styled.div`
     }
 `
 
-
 function PostCard(props) {
+
+  //Get the edge from prop
   const [edge, setEdges] = useState(props.edge);
 
+  //Handle route when postCard is clicked
   let history = useHistory();
   
-
   useEffect(() => {
     setEdges(props.edge)
   }, [props.edge])
-
-
   function pushToPostDetail(slug) {
     return (
       history.push({
@@ -73,6 +72,8 @@ function PostCard(props) {
       })
     )
   }
+
+
   return( 
     <StyledPostCard>
       <div className="conten-wrapper" onClick={() => {
@@ -86,7 +87,7 @@ function PostCard(props) {
           <div className="content-tagline">{edge.node.tagline}</div>
         </div>
       </div>
-      <Button votes={edge.node.votesCount} voted={false}/>
+      <Button edge={edge} />
     </StyledPostCard>
   )
     
