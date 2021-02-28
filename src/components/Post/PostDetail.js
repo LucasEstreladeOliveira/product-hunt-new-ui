@@ -5,6 +5,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { GET_POST } from '../../graphql/Queries' 
 import { useQuery } from '@apollo/client'
 import Load from "../Load/Load"
+import { usePosts } from "../../providers/posts"
 import ButtonText from "../Button/ButtonText"
 
 const StyledPostDetail = styled.div`
@@ -122,6 +123,8 @@ function PostDetail() {
   const location = useLocation();
   const history = useHistory();
 
+  const { votedPosts, setVotedPosts } = usePosts();
+
   const [slug] = useState(location.state.slug);
   const { loading, data } = useQuery(GET_POST, {
     variables: { slug: slug }
@@ -130,10 +133,19 @@ function PostDetail() {
   const [fullImage, setFullImage] = useState(false);
   const [voted, setVoted] = useState(false);
   const [votes, setVotes] = useState(0);
-  
+
   useEffect(() => {
-    setVotes(data?.post?.votesCount)
-  }, [data?.post?.votesCount])
+    votedPosts?.forEach(post => {
+      if(post.id === location.state.slug ){
+        setVoted(post.isVoted);
+        setVotes(post.votes)
+      }
+    })
+  }, [votedPosts, location])
+  
+  // useEffect(() => {
+  //   setVotes(data?.post?.votesCount)
+  // }, [data?.post?.votesCount])
 
   if(loading) {
     return (<Load />);
@@ -144,15 +156,23 @@ function PostDetail() {
   }
 
   function upvote() {
-    setVoted(!voted);
-    if(!voted) {
-      setVotes(votes + 1);
-    }else{
-      setVotes(votes - 1);
-    }
+    let newVotedPosts = votedPosts.map(votedPost => {
+      if(location.state.slug === votedPost.id) {
+        if(votedPost.isVoted) {
+          votedPost.isVoted = false;
+          votedPost.votes -= 1;
+        }else {
+          votedPost.isVoted = true;
+          votedPost.votes += 1;
+        }
+      }
+      return votedPost
+    })
+    setVotedPosts(newVotedPosts)
   }
+
   function pushFeedPage() {
-    history.push("/feed")
+    history.goBack()
   }
 
   return( 
@@ -179,9 +199,9 @@ function PostDetail() {
               <div className="post-info-name">{data.post.name}</div>
               <div className="post-info-topics-wrapper">
                 <div className="post-info-topics-scroll"> 
-                  {data.post.topics.edges.map( topic => {
+                  {data.post.topics.edges.map( (topic, index) => {
                     return (
-                      <div className="post-info-topics">{topic.node.name}</div>
+                      <div key={index} className="post-info-topics">{topic.node.name}</div>
                     )
                   })}
                 </div>

@@ -1,8 +1,8 @@
 import { gql } from '@apollo/client';
 
 export const GET_POSTS = gql`
-query posts( $after: String, $order: PostsOrder){ 
-  posts(first: 10, order: $order, after: $after) {
+query posts( $after: String, $order: PostsOrder, $postedBefore: DateTime, $topic: String){ 
+  posts(first: 10, order: $order, after: $after, postedBefore: $postedBefore, topic: $topic) {
     edges{
       cursor
       node{

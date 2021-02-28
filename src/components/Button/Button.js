@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useState, useEffect } from 'react'
+import { usePosts } from "../../providers/posts"
 
 
 const StyledButton  = styled.button`
@@ -36,25 +37,46 @@ const StyledButton  = styled.button`
 
 function Button(props) {
 
-  const [ votes, setVotes] = useState(props.votes)
-  const [ voted, setVoted] = useState(props.voted)
+  const [ edge, setEdge ] = useState(props.edge)
 
+  const { votedPosts, setVotedPosts } = usePosts();
+  
+  const [voted, setVoted ] = useState(false);
+  const [votes, setVotes ] = useState(votedPosts.votes);
 
   useEffect(() => {
-    setVotes(props.votes)
-    setVoted(props.voted)
-  }, [props.votes, props.voted])
-  
-  return(
-    <StyledButton className={voted ? 'voted' : ''} onClick={() => {
-      console.log("votado")
-      setVoted(!voted);
-      if(voted === false) {
-        setVotes(votes + 1)
-      }else {
-        setVotes(votes - 1)
+    votedPosts?.forEach(post => {
+      if(post.id === edge.node.slug ){
+        setVoted(post.isVoted);
+        setVotes(post.votes)
       }
-      }}>
+    })
+  }, [votedPosts, edge])
+
+  useEffect(() => {
+    setEdge(props.edge)
+  }, [props.edge])
+  
+  function vote() {
+    let newVotedPosts = votedPosts.map(votedPost => {
+      if(edge.node.slug === votedPost.id) {
+        if(votedPost.isVoted) {
+          votedPost.isVoted = false;
+          votedPost.votes -= 1;
+        }else {
+          votedPost.isVoted = true;
+          votedPost.votes += 1;
+        }
+      }
+      return votedPost
+    })
+    setVotedPosts(newVotedPosts)
+  }
+  return(
+    <StyledButton 
+      className={voted ? 'voted' : ''} 
+      onClick={() => { vote() }}
+    >
       <div className="button-wrapper">
       <div className="icon-wrapper">
         <FontAwesomeIcon icon="caret-up"></FontAwesomeIcon>
