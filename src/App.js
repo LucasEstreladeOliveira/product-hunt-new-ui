@@ -1,6 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache, ApolloProvider } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import "./globalStyle.css";
 import "./fontawesome";
 import Feed from "./views/Feed";
@@ -33,6 +33,9 @@ function App() {
     <Router>
       <ApolloProvider client={client}>
         <PostsProvider>
+          <Route exact path="/">
+            <Redirect to="/feed" />
+          </Route>
           <Route path="/feed">
             <Feed />
           </Route>
