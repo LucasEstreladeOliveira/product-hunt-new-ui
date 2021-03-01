@@ -4,6 +4,7 @@ import { GET_POSTS } from '../../../graphql/Queries'
 import PostCard from "../../Atoms/PostCard/PostCard"
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Load from "../../Atoms/Load/Load"
+import Error from "../../Atoms/Error/Error"
 import { usePosts } from "../../../providers/posts"
 
 function Posts(props) {
@@ -57,7 +58,8 @@ function Posts(props) {
 
   //Return error in case of error
   if(error) {
-    return (<div>Error</div>);
+    console.log(error.message)
+    return (<Error error={error.message}/>);
   }
   
   //Fetch more data from API on the end of the page
