@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { useQuery } from '@apollo/client'
-import { GET_POSTS } from '../../graphql/Queries' 
-import PostCard from "./PostCard"
+import { GET_POSTS } from '../../../graphql/Queries' 
+import PostCard from "../../Atoms/PostCard/PostCard"
 import InfiniteScroll from 'react-infinite-scroll-component'
-import Load from "../Load/Load"
-import { usePosts } from "../../providers/posts"
+import Load from "../../Atoms/Load/Load"
+import { usePosts } from "../../../providers/posts"
 
 function Posts(props) {
 
@@ -16,6 +16,7 @@ function Posts(props) {
     variables: { after: null, order: props.ordem, postedBefore: postedBefore, topic: topic }
   });
   
+  //Helper to filter array of objects 
   const uniqueArray = a => [...new Set(a.map(o => JSON.stringify(o)))].map(s => JSON.parse(s))
   
   //Map the data fetched and create an array to set voted posts
@@ -31,36 +32,35 @@ function Posts(props) {
     
     let filteredPosts = uniqueArray([...newVotedPosts, ...votedPosts])
 
-
     setVotedPosts(filteredPosts)
+    // eslint-disable-next-line
   }, [data, setVotedPosts])
 
+  //Update postedBefore from context and refetch based on the date
   useEffect(() => {
     refetch({
       variables: { postedBefore: postedBefore },
     })
-  }, [postedBefore])
+  }, [postedBefore, refetch])
 
+  //Update topic from context and refetch based on the topic
   useEffect(() => {
-    console.log("foi?")
     refetch({
       variables: { topic: topic },
     })
-  }, [topic])
+  }, [topic, refetch])
 
   //Return loading while data is not fetched
   if(loading) {
     return (<Load />);
   }
-  
-  
+
   //Return error in case of error
   if(error) {
     return (<div>Error</div>);
   }
   
-
-
+  //Fetch more data from API on the end of the page
   function fetchMoreData() {
     const { endCursor } = data?.posts.pageInfo;
     fetchMore({
@@ -75,7 +75,7 @@ function Posts(props) {
     });
   }
   
-
+  //Render list of posts
   return (
     <div>
       <InfiniteScroll dataLength={data.posts.edges.length} next={fetchMoreData} hasMore={data.posts.pageInfo.hasNextPage}>

@@ -2,7 +2,9 @@ import styled from "styled-components"
 import { useEffect, useState } from 'react';
 import Button from "../Button/Button"
 import { useHistory } from "react-router-dom"
+import { usePosts } from "../../../providers/posts"
 
+//PostCard styled
 const StyledPostCard = styled.div`
     display: -webkit-box;
     margin: 10px;
@@ -50,18 +52,37 @@ const StyledPostCard = styled.div`
       color: #ffffff !important
     }
 `
-
 function PostCard(props) {
 
   //Get the edge from prop
-  const [edge, setEdges] = useState(props.edge);
+  const [edge, setEdge] = useState(props.edge);
 
-  //Handle route when postCard is clicked
+  //Get voted posts from context
+  const { votedPosts, setVotedPosts } = usePosts();
+  
+  //Create states to manage upvote logic
+  const [voted, setVoted ] = useState(false);
+  const [votes, setVotes ] = useState(0);
+
+  //Handle route when post card is clicked
   let history = useHistory();
   
+  //Update post edge
   useEffect(() => {
-    setEdges(props.edge)
+    setEdge(props.edge)
   }, [props.edge])
+
+  //Update upvote data
+  useEffect(() => {
+    votedPosts?.forEach(post => {
+      if(post.id === edge.node.slug ){
+        setVoted(post.isVoted);
+        setVotes(post.votes)
+      }
+    })
+  }, [votedPosts, edge])
+
+  //Redirect to detail page when post card is clicked
   function pushToPostDetail(slug) {
     return (
       history.push({
@@ -72,8 +93,25 @@ function PostCard(props) {
       })
     )
   }
+  
+  //Function to handle upvote
+  function vote() {
+    let newVotedPosts = votedPosts.map(votedPost => {
+      if(edge.node.slug === votedPost.id) {
+        if(votedPost.isVoted) {
+          votedPost.isVoted = false;
+          votedPost.votes -= 1;
+        }else {
+          votedPost.isVoted = true;
+          votedPost.votes += 1;
+        }
+      }
+      return votedPost
+    })
+    setVotedPosts(newVotedPosts)
+  }
 
-
+  //Render styled post card
   return( 
     <StyledPostCard>
       <div className="conten-wrapper" onClick={() => {
@@ -87,7 +125,9 @@ function PostCard(props) {
           <div className="content-tagline">{edge.node.tagline}</div>
         </div>
       </div>
-      <Button edge={edge} />
+      <span onClick={() => vote()}>
+        <Button voted={voted} votes={votes} />
+      </span>
     </StyledPostCard>
   )
     

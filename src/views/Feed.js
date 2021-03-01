@@ -1,8 +1,8 @@
 import { Switch, Route } from 'react-router-dom';
-import PostList from '../components/Post/PostList'
+import PostList from '../components/Molecules/PostList/PostList'
 import { useLocation, useRouteMatch } from 'react-router-dom'
 import { useEffect, useState } from 'react';
-import Nav from "../components/Nav/Nav"
+import Nav from "../components/Molecules/Nav/Nav"
 
 function Feed() {
 

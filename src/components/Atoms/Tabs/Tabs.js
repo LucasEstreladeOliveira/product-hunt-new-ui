@@ -3,7 +3,6 @@ import styled from "styled-components"
 import { useHistory } from 'react-router-dom'
 import { useState } from 'react';
 
-
 const StyledTabs = styled.div`
   display: flex;
 
@@ -17,14 +16,16 @@ const StyledTabs = styled.div`
   }
 `
 
-
 //Render tabs function
 function Tabs(props) {
 
+  //Handle route when tab is clicked
   let history = useHistory();
 
+  //Create tabs state based on tabs prop
   const [tabs, setTabs] = useState(props.tabs)
 
+  //Handles tab selection and redirect to selected tab
   function selectTab(tab) {
     let newTabs = tabs.map( t => {
       if(t.name === tab.name){
@@ -35,6 +36,7 @@ function Tabs(props) {
     setTabs(newTabs);
   }
 
+  //Render styled tabs
   return (
     <StyledTabs>{
     tabs.map( (tab, index) => {
@@ -49,6 +51,5 @@ function Tabs(props) {
     </StyledTabs>
   )
 }
-
 
 export default Tabs;

@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import "./globalStyle.css";
 import "./fontawesome";
 import Feed from "./views/Feed";
-import PostDetail from "./components/Post/PostDetail";
+import PostDetail from "./components/Organisms/PostDetail/PostDetail";
 import { PostsProvider } from "./providers/posts" 
 
 const httpLink = createHttpLink({

@@ -17,5 +17,4 @@ const Tab = styled.div`
   }
 `;
 
-
 export default Tab;

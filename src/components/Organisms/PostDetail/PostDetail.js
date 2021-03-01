@@ -1,13 +1,13 @@
 import styled from "styled-components"
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useLocation, useHistory } from 'react-router-dom';
-import { GET_POST } from '../../graphql/Queries' 
+import { GET_POST } from '../../../graphql/Queries' 
 import { useQuery } from '@apollo/client'
-import Load from "../Load/Load"
-import { usePosts } from "../../providers/posts"
-import ButtonText from "../Button/ButtonText"
+import Load from "../../Atoms/Load/Load"
+import PostDetailFooter from "./PostDetailFooter"
 
+//Post detail styled
 const StyledPostDetail = styled.div`
 
   .post-detail-wrapper{
@@ -117,64 +117,40 @@ const StyledPostDetail = styled.div`
   }
 `
 
-
 function PostDetail() {
   
+  //Route handlers
   const location = useLocation();
   const history = useHistory();
 
-  const { votedPosts, setVotedPosts } = usePosts();
-
+  //Create state from location state
   const [slug] = useState(location.state.slug);
+
+  //Create other states
+  const [fullImage, setFullImage] = useState(false);
+
+  //Make request to get post based on its slug
   const { loading, data } = useQuery(GET_POST, {
     variables: { slug: slug }
   });
 
-  const [fullImage, setFullImage] = useState(false);
-  const [voted, setVoted] = useState(false);
-  const [votes, setVotes] = useState(0);
 
-  useEffect(() => {
-    votedPosts?.forEach(post => {
-      if(post.id === location.state.slug ){
-        setVoted(post.isVoted);
-        setVotes(post.votes)
-      }
-    })
-  }, [votedPosts, location])
-  
-  // useEffect(() => {
-  //   setVotes(data?.post?.votesCount)
-  // }, [data?.post?.votesCount])
-
+  //Return loading component while loading
   if(loading) {
     return (<Load />);
   }
 
+  //Toggle image full/normal size
   function toggleFullImage() {
     setFullImage(!fullImage);
   }
 
-  function upvote() {
-    let newVotedPosts = votedPosts.map(votedPost => {
-      if(location.state.slug === votedPost.id) {
-        if(votedPost.isVoted) {
-          votedPost.isVoted = false;
-          votedPost.votes -= 1;
-        }else {
-          votedPost.isVoted = true;
-          votedPost.votes += 1;
-        }
-      }
-      return votedPost
-    })
-    setVotedPosts(newVotedPosts)
-  }
-
+  //Redirect user to previous feed page
   function pushFeedPage() {
     history.goBack()
   }
 
+  //Render styled post detail 
   return( 
     <StyledPostDetail>
       <div className="post-detail-wrapper">
@@ -222,19 +198,7 @@ function PostDetail() {
           </div>
         </div>
       </div>
-      <div className="post-info-footer">
-        <div className="post-info-button-left">
-          <ButtonText>Get it</ButtonText>
-        </div>
-        <div className="post-info-button-right">
-          <ButtonText className={voted ? "voted" : ""} voted={voted} onClick={() => {
-            upvote();
-          }}>
-            Upvote ({votes})
-          </ButtonText>
-
-        </div>
-      </div>
+      <PostDetailFooter />
     </StyledPostDetail>
   )
     
