@@ -7,12 +7,13 @@ import Feed from "./views/Feed";
 import PostDetail from "./components/Organisms/PostDetail/PostDetail";
 import { PostsProvider } from "./providers/posts" 
 
+
 const httpLink = createHttpLink({
-  uri: 'https://api.producthunt.com/v2/api/graphql',
+  uri: `${process.env.REACT_APP_HOST}/v2/api/graphql`,
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = 'ygVnSVdlCNNpA0u5irKml6ElMX792pcd-1SH2gCeMiY';
+  const token = process.env.REACT_APP_ACCESS_TOKEN;
   return {
     headers: {
       ...headers,
